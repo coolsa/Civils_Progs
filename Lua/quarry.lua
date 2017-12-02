@@ -1567,7 +1567,7 @@ function dig(doAdd, mineFunc, inspectFunc, suckDir) --Note, turtle will not both
   if oreQuarry and inspectFunc then
     local worked, data = inspectFunc()
     if data then
-      mineFlag = not blacklist[data.name] or blacklist[data.name .. data.metadata]
+      mineFlag = not (blacklist[data.name] or blacklist[data.name .. data.metadata])
       if data.name == chestID then
         emptyChest(suckDir)
       end
