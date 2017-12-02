@@ -84,7 +84,7 @@ Welcome!: Welcome to quarry help. Below are help entries for all parameters. Exa
 -oreQuarry: [t/f] If true, the turtle will use ore quarry mode. It will not mine the blocks that are placed in the turtle initially. So if you put in stone, it will ignore stone blocks and only mine ores.
 -oreQuarry: [t/f] If you are using a newer version of CC, you won't have to put in any compare blocks. (CC 1.64+)
 -blacklist: [file name] If using oreQuarry, this is the blacklist file it will read. Example --
-  minecraft:stone
+  minecraft:stone0
   minecraft:sand
   ThermalExpansion:Sponge
   ThermalFoundation:Storage
@@ -767,7 +767,7 @@ if autoResume and not restoreFoundSwitch then --Don't do for restore because wou
 end
 --oreQuarry blacklist
 local blacklist = { "minecraft:air",  "minecraft:bedrock", "minecraft:cobblestone", "minecraft:dirt", "minecraft:ice", "minecraft:ladder", "minecraft:netherrack", "minecraft:sand", "minecraft:sandstone",
-  "minecraft:snow", "minecraft:snow_layer", "minecraft:stone", "minecraft:gravel", "minecraft:grass", "minecraft:torch" }
+  "minecraft:snow", "minecraft:snow_layer", "minecraft:stone0", "minecraft:gravel", "minecraft:grass", "minecraft:torch" }
 for a,b in pairs(copyTable(blacklist)) do
   blacklist[b], blacklist[a] = true, nil --Switch
 end
@@ -1370,7 +1370,7 @@ function assignTypes(types, count) --The parameters allow a preexisting table to
         types[i] = count
       end
       if oreQuarry then
-        if blacklist[turtle.getItemDetail().name] then
+        if blacklist[turtle.getItemDetail().name] or blacklist[turtle.getItemDetail().name .. turtle.getItemDetail().damage] then
           dumpSlots[i] = true
         else
           dumpSlots[i] = false
@@ -1567,7 +1567,7 @@ function dig(doAdd, mineFunc, inspectFunc, suckDir) --Note, turtle will not both
   if oreQuarry and inspectFunc then
     local worked, data = inspectFunc()
     if data then
-      mineFlag = not blacklist[data.name]
+      mineFlag = not blacklist[data.name] or blacklist[data.name .. data.metadata]
       if data.name == chestID then
         emptyChest(suckDir)
       end
